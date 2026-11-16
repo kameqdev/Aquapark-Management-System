@@ -1,0 +1,24 @@
+{
+  "name": "backend",
+  "module": "src/index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "typecheck": "bun check",
+    "db:generate": "bun --env-file=../.env --bun drizzle-kit generate",
+    "db:migrate": "bun --env-file=../.env --bun drizzle-kit migrate",
+    "db:studio": "bun --env-file=../.env --bun drizzle-kit studio",
+    "db:test": "bun --env-file=../.env run src/db/test-crud.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.4",
+    "@types/pg": "^8.23.1",
+    "drizzle-kit": "^1.0.0-rc.5",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "drizzle-orm": "^1.0.0-rc.5",
+    "pg": "^8.23.1",
+    "zod": "^4.6.7"
+  }
+}

@@ -1,0 +1,197 @@
+{
+  "type": "base",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "c6dd6eb0-cae2-42b1-91b4-2db397fe6d52",
+  "prevIds": [
+    "00000000-0000-0000-0000-000000000000"
+  ],
+  "footprints": [
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "zones"
+      ],
+      "writes": [
+        "s|tbl|public.zones",
+        "n|tbl|public.zones",
+        "e|tbl|public.zones",
+        "n|rel|public.zones",
+        "n|type|public.zones",
+        "n|rel|public.zones_pkey",
+        "n|rel|public.zones_name_key"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_view",
+      "statementTarget": [
+        "view",
+        "public",
+        "v_zone_occupancy"
+      ],
+      "writes": [
+        "s|view|public.v_zone_occupancy",
+        "n|view|public.v_zone_occupancy",
+        "e|view|public.v_zone_occupancy",
+        "n|rel|public.v_zone_occupancy",
+        "n|type|public.v_zone_occupancy"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    }
+  ],
+  "ddl": [
+    {
+      "schema": "public",
+      "name": "zones",
+      "isRlsEnabled": false,
+      "entityType": "tables"
+    },
+    {
+      "schema": "public",
+      "table": "zones",
+      "name": "id",
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": {
+        "type": "always",
+        "name": "zones_id_seq",
+        "increment": "1",
+        "startWith": "1",
+        "minValue": "1",
+        "maxValue": "2147483647",
+        "cache": 1,
+        "cycle": false
+      },
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "zones",
+      "name": "name",
+      "type": "varchar(100)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "zones",
+      "name": "max_capacity",
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "zones",
+      "name": "current_occupancy",
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "0",
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "zones",
+      "name": "minute_rate",
+      "type": "numeric(6,2)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "'0.00'",
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "zones",
+      "name": "is_active",
+      "type": "boolean",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "true",
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "zones",
+      "name": "zones_pkey",
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "entityType": "pks"
+    },
+    {
+      "schema": "public",
+      "table": "zones",
+      "name": "zones_name_key",
+      "nameExplicit": false,
+      "columns": [
+        "name"
+      ],
+      "nullsNotDistinct": false,
+      "entityType": "uniques"
+    },
+    {
+      "schema": "public",
+      "table": "zones",
+      "name": "chk_max_capacity_positive",
+      "value": "\"max_capacity\" > 0",
+      "entityType": "checks"
+    },
+    {
+      "schema": "public",
+      "table": "zones",
+      "name": "chk_minute_rate_non_negative",
+      "value": "\"minute_rate\" >= 0",
+      "entityType": "checks"
+    },
+    {
+      "schema": "public",
+      "table": "zones",
+      "name": "chk_occupancy_bounds",
+      "value": "\"current_occupancy\" >= 0 AND \"current_occupancy\" <= \"max_capacity\"",
+      "entityType": "checks"
+    },
+    {
+      "schema": "public",
+      "name": "v_zone_occupancy",
+      "definition": "select \"id\", \"name\", \"current_occupancy\", \"max_capacity\", (\"max_capacity\" - \"current_occupancy\") as \"available_spots\", ROUND((\"current_occupancy\"::NUMERIC / \"max_capacity\") * 100, 1) as \"occupancy_percentage\", CASE WHEN \"current_occupancy\" >= \"max_capacity\" THEN 'FULL (LOCKED)' ELSE 'AVAILABLE' END as \"gate_status\" from \"zones\" where \"zones\".\"is_active\" = true",
+      "with": null,
+      "withNoData": null,
+      "using": null,
+      "tablespace": null,
+      "materialized": false,
+      "entityType": "views"
+    }
+  ]
+}

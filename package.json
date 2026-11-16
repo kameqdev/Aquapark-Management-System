@@ -1,0 +1,19 @@
+{
+  "name": "aquapark-management-system",
+  "workspaces": [
+    "backend"
+  ],
+  "private": true,
+  "scripts": {
+    "typecheck": "bun check",
+    "db:up": "docker compose up -d postgres",
+    "db:down": "docker compose stop postgres",
+    "db:logs": "docker logs -f ams_postgres",
+    "db:generate": "bun --filter backend db:generate",
+    "db:migrate": "bun --filter backend db:migrate",
+    "db:test": "bun --filter backend db:test"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}
